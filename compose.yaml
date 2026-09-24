@@ -1,0 +1,32 @@
+services:
+  markdock:
+    build: .
+    image: markdock:local
+    user: "${MARKDOCK_UID:-1000}:${MARKDOCK_GID:-1000}"
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 30s
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    environment:
+      MARKDOCK_PUBLIC_ORIGIN: ${MARKDOCK_PUBLIC_ORIGIN:?Set the external HTTPS origin}
+      MARKDOCK_WORKSPACE_ROOTS: '["/workspaces"]'
+      MARKDOCK_DATA_DIR: /var/lib/markdock
+      MARKDOCK_HOST: 0.0.0.0
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:${MARKDOCK_HTTP_PORT:-3000}:3000"
+    volumes:
+      - type: bind
+        source: ${MARKDOCK_CONFIG_PATH:?Set an existing configuration directory}
+        target: /var/lib/markdock
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MARKDOCK_DOCUMENTS_PATH:?Set an existing documents directory}
+        target: /workspaces
+        bind:
+          create_host_path: false

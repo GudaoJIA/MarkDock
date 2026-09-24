@@ -1,0 +1,901 @@
+/* Apply workspace colors to portal content as well as the workspace shell. */
+:root {
+  --ws-text: #303033;
+  --ws-secondary: #52525b;
+  --ws-muted: #77777c;
+  --ws-faint: #a1a1aa;
+  --ws-surface: #ffffff;
+  --ws-subtle: #fafafa;
+  --ws-hover: #f1f1f3;
+  --ws-line: #e7e7e9;
+  --ws-strong-line: #d6d3d1;
+  --ws-selected: #e4e4e7;
+  --ws-match: #fff1b8;
+  --ws-active-match: #ffdc77;
+  --ws-match-ring: #d7a942;
+  --ws-link: #2563eb;
+  --ws-danger: #b91c1c;
+  --ws-danger-line: #fecaca;
+  --ws-danger-bg: #fef2f2;
+  --ws-primary-hover: #45454a;
+}
+:root.dark {
+  --ws-text: #e5e5e7;
+  --ws-secondary: #c6c6cb;
+  --ws-muted: #a1a1aa;
+  --ws-faint: #94949e;
+  --ws-surface: #1b1b1e;
+  --ws-subtle: #202024;
+  --ws-hover: #2b2b31;
+  --ws-line: #36363e;
+  --ws-strong-line: #50505b;
+  --ws-selected: #383842;
+  --ws-match: #57461e;
+  --ws-active-match: #725921;
+  --ws-match-ring: #c89d3c;
+  --ws-link: #82b1ff;
+  --ws-danger: #fca5a5;
+  --ws-danger-line: #704048;
+  --ws-danger-bg: #382126;
+  --ws-primary-hover: #c6c6cb;
+}
+.dark :is(.ws-app, .ws-popover) {
+  --color-stone-50: var(--ws-subtle);
+  --color-stone-100: var(--ws-hover);
+  --color-stone-200: var(--ws-line);
+  --color-stone-300: var(--ws-strong-line);
+  --color-stone-400: var(--ws-faint);
+  --color-stone-500: var(--ws-muted);
+  --color-stone-600: var(--ws-secondary);
+  --color-stone-700: var(--ws-text);
+  --color-stone-800: var(--ws-text);
+  --color-stone-900: var(--ws-text);
+  --color-stone-950: var(--ws-text);
+  --color-amber-50: #332a18;
+  --color-amber-100: #46381d;
+  --color-amber-200: #6f5724;
+  --color-amber-600: #eac46b;
+  --color-amber-700: #eac46b;
+  --color-amber-800: #f0cf88;
+  --color-amber-900: #f0cf88;
+  --color-red-50: var(--ws-danger-bg);
+  --color-red-100: var(--ws-danger-bg);
+  --color-red-200: var(--ws-danger-line);
+  --color-red-600: var(--ws-danger);
+  --color-red-700: var(--ws-danger);
+}
+.ws-app {
+  background: var(--ws-surface);
+}
+.ws-popover select option {
+  color: var(--ws-text);
+  background: var(--ws-surface);
+}
+.ws-app {
+  font-family:
+    var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+.ws-input {
+  padding: 9px 12px;
+  font-size: 13px;
+  color: var(--ws-text);
+  outline: none;
+  background: var(--ws-surface);
+  border: 1px solid var(--ws-line);
+  border-radius: 7px;
+}
+.ws-input:focus {
+  border-color: var(--ws-faint);
+  box-shadow: 0 0 0 2px var(--ws-hover);
+}
+.ws-input:disabled {
+  opacity: 0.6;
+}
+/* Native selects keep their keyboard behavior; give every arrow a stable inset. */
+:is(.ws-app, .ws-popover) select {
+  padding-right: 40px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2377777c' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px 16px;
+}
+.dark :is(.ws-app, .ws-popover) select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+@media (forced-colors: active) {
+  :is(.ws-app, .ws-popover) select {
+    appearance: auto;
+    background-image: none;
+  }
+}
+.ws-prose h1 {
+  margin-top: 1.2em;
+  font-size: 32px;
+  line-height: 1.4;
+  letter-spacing: -0.025em;
+}
+.ws-prose h2 {
+  margin-top: 1.6em;
+  font-size: 24px;
+  line-height: 1.5;
+}
+.ws-prose h3 {
+  margin-top: 1.4em;
+  font-size: 20px;
+}
+.ws-prose > :first-child h1,
+.ws-prose > h1:first-child {
+  margin-top: 0;
+}
+.ws-prose blockquote {
+  font-style: normal;
+  color: var(--ws-muted);
+  border-color: var(--ws-strong-line);
+}
+.ws-prose ::selection {
+  background: var(--ws-line);
+}
+.ws-app button {
+  cursor: pointer;
+}
+.ws-app button:disabled {
+  cursor: default;
+}
+.ws-app pre {
+  tab-size: 2;
+}
+
+/* Shared workspace surfaces, including portalled menus and dialogs. */
+.ws-app,
+.ws-popover {
+  color: var(--ws-text);
+}
+.ws-app svg.lucide,
+.ws-popover svg.lucide {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  stroke-width: 1.75;
+}
+.ws-app main > header > svg,
+.ws-app aside > div:first-child > svg {
+  width: 18px;
+  height: 18px;
+}
+.ws-app aside {
+  background: var(--ws-subtle);
+  border-color: var(--ws-line);
+}
+.ws-app button,
+.ws-popover button {
+  transition:
+    background-color 120ms,
+    color 120ms;
+}
+.ws-app button:focus-visible,
+.ws-popover button:focus-visible,
+.ws-popover select:focus-visible {
+  outline: 2px solid var(--ws-faint);
+  outline-offset: 2px;
+}
+.ws-popover {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei",
+    sans-serif;
+  color: var(--ws-text);
+  background: var(--ws-surface);
+  border-color: var(--ws-line);
+  border-radius: 9px;
+}
+.ws-popover [role="menuitem"],
+.ws-popover [role="option"] {
+  gap: 8px;
+  font-size: 14px;
+}
+.ws-icon-button,
+.ws-button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 9px;
+  font-size: 13px;
+  color: var(--ws-secondary);
+  border-radius: 6px;
+}
+.ws-icon-button {
+  padding: 5px;
+}
+.ws-button {
+  border: 1px solid var(--ws-line);
+}
+.ws-icon-button:hover,
+.ws-button:hover,
+.ws-scope:hover {
+  background: var(--ws-hover);
+}
+.ws-button-primary {
+  color: var(--primary-foreground);
+  background: var(--primary);
+}
+.ws-button-primary:hover {
+  background: var(--ws-primary-hover);
+}
+.ws-app button:disabled,
+.ws-popover button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.ws-divider {
+  width: 1px;
+  height: 16px;
+  margin: 0 6px;
+  background: var(--ws-line);
+}
+.ws-search-result[aria-selected="true"],
+.ws-scope[aria-pressed="true"] {
+  color: var(--ws-text);
+  background: var(--ws-hover);
+}
+.ws-scope {
+  padding: 5px 9px;
+  border-radius: 5px;
+}
+.ws-search-mark {
+  color: inherit;
+  background: var(--ws-match);
+  border-radius: 2px;
+}
+.ws-search-active {
+  color: inherit;
+  outline: 1px solid var(--ws-match-ring);
+  background: var(--ws-active-match);
+  border-radius: 2px;
+}
+.ws-upload-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  font-size: 14px;
+  border: 1px dashed var(--ws-strong-line);
+  border-radius: 7px;
+}
+.ws-upload-area input {
+  max-width: 100%;
+  font-size: 12px;
+}
+.ws-prose a {
+  color: var(--ws-secondary);
+  text-decoration-color: var(--ws-faint);
+}
+.ws-toolbar-shell {
+  container-name: writing-toolbar;
+  container-type: inline-size;
+}
+.ws-toolbar-main > * {
+  flex-shrink: 0;
+}
+.ws-toolbar-main {
+  flex: 1;
+  overflow-x: auto;
+}
+.ws-prose a.ws-link {
+  color: var(--ws-link);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.ws-dropdown-chevron {
+  width: 12px;
+}
+.ws-toolbar button[aria-pressed="true"] {
+  color: var(--ws-text);
+  background: var(--ws-hover);
+}
+@container writing-toolbar (max-width: 599px) {
+  .ws-tool-label,
+  .ws-dropdown-chevron {
+    display: none;
+  }
+  .ws-toolbar .ws-divider {
+    margin-inline: 2px;
+  }
+  .ws-toolbar button {
+    gap: 4px;
+    min-width: 30px;
+    padding-inline: 5px;
+  }
+}
+
+@container writing-toolbar (max-width: 379px) {
+  .ws-toolbar,
+  .ws-toolbar-main,
+  .ws-toolbar [data-toolbar-right] {
+    gap: 0;
+  }
+}
+
+.ws-table-menu-button {
+  display: block;
+  width: 100%;
+  padding: 7px 8px;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.ws-table-menu-button:hover,
+.ws-table-menu-button:focus-visible {
+  background: var(--ws-hover);
+}
+.ws-table-menu-button:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+.ws-table-grid {
+  display: grid;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 4px;
+}
+.ws-table-grid:focus-visible {
+  outline: 2px solid var(--ws-muted);
+  outline-offset: 2px;
+}
+.ws-table-grid > [role="row"] {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+}
+.ws-table-grid button {
+  aspect-ratio: 1;
+  cursor: pointer;
+  background: var(--ws-subtle);
+  border: 1px solid var(--ws-strong-line);
+  border-radius: 2px;
+}
+.ws-table-grid button[data-selected] {
+  background: var(--ws-line);
+  border-color: var(--ws-muted);
+}
+.ws-table-size-input {
+  display: block;
+  width: 100%;
+  padding: 6px;
+  margin-top: 5px;
+  border: 1px solid var(--ws-strong-line);
+  border-radius: 4px;
+}
+.ws-table-cell[data-target] {
+  background: var(--ws-selected);
+  box-shadow: inset 0 0 0 1px var(--ws-faint);
+}
+.ws-table-handle {
+  position: absolute;
+  z-index: 5;
+  line-height: 1;
+  pointer-events: none;
+  opacity: 0;
+}
+.ws-table:hover .ws-table-handle,
+.ws-table[data-active] .ws-table-handle,
+.ws-table-handle:focus-within {
+  pointer-events: auto;
+  opacity: 1;
+}
+.ws-table-handle button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ws-muted);
+  cursor: pointer;
+  background: var(--ws-hover);
+  border-radius: 4px;
+}
+.ws-table-handle button:hover,
+.ws-table-handle button:focus-visible,
+.ws-table-handle button[data-state="open"] {
+  color: var(--ws-text);
+  background: var(--ws-line);
+}
+.ws-table-row-handle {
+  top: 4px;
+  bottom: 4px;
+  left: -23px;
+  width: 22px;
+}
+.ws-table-row-handle button {
+  width: 20px;
+  height: 100%;
+  min-height: 24px;
+}
+.ws-table-column-handle {
+  top: -23px;
+  right: 4px;
+  left: 4px;
+  height: 22px;
+}
+.ws-table-column-handle button {
+  width: 100%;
+  height: 20px;
+}
+@media (hover: none) {
+  .ws-table-handle {
+    pointer-events: auto;
+    opacity: 1;
+  }
+}
+
+/* The drag preview is portalled outside the sidebar and never participates in hit testing. */
+.ws-drag-preview {
+  position: fixed;
+  z-index: 100;
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  height: 36px;
+  padding: 0 10px;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  pointer-events: none;
+  user-select: none;
+  border: 1px solid var(--ws-line);
+  box-shadow:
+    0 3px 10px #00000014,
+    0 1px 3px #0000000a;
+}
+.ws-tree-row {
+  transition:
+    background-color 120ms,
+    box-shadow 120ms,
+    opacity 120ms;
+}
+.ws-tree-row[data-drag-source] {
+  opacity: 0.35;
+}
+.ws-tree-row[data-drag-source] .ws-tree-actions {
+  visibility: hidden;
+}
+.ws-tree-row[data-drop-active] {
+  color: var(--ws-text);
+  background: var(--ws-selected);
+  box-shadow: inset 0 0 0 2px var(--ws-muted);
+}
+.ws-tree-row[data-drop-active] > button {
+  font-weight: 600;
+}
+.ws-app [data-dragging] {
+  user-select: none;
+}
+/* Portal presence scopes the arrow to the gesture, including captured pointers outside the tree. */
+html:has([data-drag-preview]),
+html:has([data-drag-preview]) * {
+  cursor: default !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ws-tree-row {
+    transition: none;
+  }
+}
+
+.ws-writing-block {
+  position: relative;
+  scroll-margin-top: 28px;
+}
+.ws-writing-block[hidden] {
+  display: none !important;
+}
+.ws-writing-block[data-nav-target] {
+  background: var(--ws-match);
+  border-radius: 5px;
+}
+.ws-writing-layout .ws-prose {
+  padding-inline: max(72px, calc((100% - 700px) / 2));
+}
+.ws-block-controls {
+  position: absolute;
+  top: var(--ws-first-line-y, 18px);
+  right: calc(100% + 6px);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: max-content;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+.ws-block-controls .ws-icon-button {
+  padding: 2px;
+  color: var(--ws-faint);
+}
+/* Reserve the inner gutter for table row actions; keep the block grip outside it. */
+.ws-writing-block:has(.ws-table) > .ws-block-controls {
+  right: calc(100% + 32px);
+}
+.ws-writing-block:hover > .ws-block-controls,
+.ws-block-controls:focus-within,
+.ws-block-controls:has([data-state="open"]) {
+  opacity: 1;
+}
+.ws-heading-level {
+  width: 22px;
+  font-family: monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ws-muted);
+  text-align: center;
+}
+.ws-body-grip {
+  touch-action: none;
+}
+.ws-fold-summary {
+  display: block;
+  padding: 2px 8px;
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: var(--ws-muted);
+  background: var(--ws-hover);
+  border-radius: 5px;
+}
+.ws-body-drop-line {
+  position: fixed;
+  z-index: 101;
+  height: 2px;
+  pointer-events: none;
+  background: var(--ws-muted);
+}
+.ws-outline {
+  display: flex;
+  flex: 0 0 220px;
+  flex-direction: column;
+  width: 220px;
+  background: var(--ws-subtle);
+  border-left: 1px solid var(--ws-line);
+}
+.ws-outline-item {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  color: var(--ws-muted);
+  text-align: left;
+  white-space: nowrap;
+  border-radius: 5px;
+}
+.ws-outline-item:hover,
+.ws-outline-item[aria-current] {
+  color: var(--ws-text);
+  background: var(--ws-selected);
+}
+.ws-writing-stats {
+  display: flex;
+  flex-shrink: 0;
+  gap: 12px;
+  align-items: center;
+  height: 36px;
+  padding: 0 18px;
+  font-size: 11px;
+  color: var(--ws-muted);
+  white-space: nowrap;
+  border-top: 1px solid var(--ws-line);
+}
+.ws-writing-stats progress {
+  height: 5px;
+  accent-color: var(--ws-muted);
+}
+.ws-replace-bar {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  background: var(--ws-subtle);
+  border-bottom: 1px solid var(--ws-line);
+}
+.ws-replace-bar input {
+  max-width: 420px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+.ws-image-viewer {
+  display: flex;
+  flex-direction: column;
+  width: min(94vw, 1200px);
+  max-width: 94vw !important;
+  height: 90dvh;
+}
+.ws-image-canvas {
+  position: relative;
+  display: grid;
+  flex: 1;
+  place-items: center;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: move;
+  background: var(--ws-hover);
+  border-radius: 6px;
+}
+.ws-image-canvas img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  flex-shrink: 0;
+  max-width: none;
+  max-height: none;
+  user-select: none;
+}
+@media (max-width: 1100px) {
+  .ws-outline {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: 25;
+    width: min(260px, 80%);
+    box-shadow: -8px 0 25px #0000000a;
+  }
+}
+@media (max-width: 700px) {
+  .ws-reading-time {
+    display: none;
+  }
+  .ws-writing-stats {
+    gap: 6px;
+    padding-inline: 8px;
+  }
+  .ws-writing-stats progress {
+    display: none;
+  }
+}
+
+.ws-trash-panel .ws-trash-danger {
+  color: var(--ws-danger);
+  border-color: var(--ws-danger-line);
+}
+.ws-trash-panel .ws-trash-danger:hover:not(:disabled) {
+  background: var(--ws-danger-bg);
+}
+
+/* CodeMirror chrome uses the same palette as the visual editor. */
+.ws-app .cm-editor {
+  color: var(--ws-text);
+  background: var(--ws-surface);
+}
+.ws-app .cm-cursor {
+  border-left-color: var(--ws-text);
+}
+.ws-app .cm-panels {
+  color: var(--ws-text);
+  background: var(--ws-subtle);
+  border-color: var(--ws-line);
+}
+.ws-app .cm-button {
+  color: var(--ws-text);
+  background: var(--ws-hover);
+  border-color: var(--ws-strong-line);
+}
+.ws-app .cm-textfield {
+  color: var(--ws-text);
+  background: var(--ws-surface);
+}
+.ws-app .cm-selectionBackground {
+  background: var(--ws-selected);
+}
+.ws-app .cm-searchMatch {
+  background: var(--ws-match);
+}
+.ws-app .cm-searchMatch-selected {
+  background: var(--ws-active-match);
+}
+.ws-app .cm-activeLineGutter {
+  color: var(--ws-text);
+  background: var(--ws-hover);
+}
+.dark .ws-code .hljs-comment {
+  color: #a1a1aa;
+}
+.dark .ws-code :is(.hljs-keyword, .hljs-selector-tag, .hljs-literal) {
+  color: #c4a7ff;
+}
+.dark .ws-code :is(.hljs-string, .hljs-attr) {
+  color: #a8d6a0;
+}
+.dark .ws-code :is(.hljs-number, .hljs-built_in) {
+  color: #efbf83;
+}
+.dark .ws-code :is(.hljs-title, .hljs-function) {
+  color: #82b1ff;
+}
+
+.ws-settings-nav .ws-button,
+.ws-button.ws-sidebar-action {
+  flex-shrink: 0;
+  justify-content: flex-start;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.ws-workspace-trigger[data-open],
+.ws-workspace-trigger:has(
+  > button:not(:disabled):is(:hover, :active, :focus-visible)
+) {
+  background: var(--ws-hover);
+}
+.ws-workspace-trigger > .ws-icon-button:hover {
+  background: transparent;
+}
+
+/* Short, interruptible UI transitions. Editor text is never scaled. */
+.ws-sidebar-motion {
+  visibility: visible;
+  margin-left: 0;
+  opacity: 1;
+  transition:
+    margin-left 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 140ms ease,
+    visibility 0s;
+}
+.ws-sidebar-motion[data-open="false"] {
+  visibility: hidden;
+  margin-left: calc(-1 * var(--ws-sidebar-width));
+  opacity: 0;
+  transition:
+    margin-left 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 120ms ease,
+    visibility 0s 180ms;
+}
+.ws-writing-layout {
+  overflow: hidden;
+}
+.ws-outline {
+  visibility: visible;
+  margin-right: 0;
+  opacity: 1;
+  transition:
+    margin-right 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 140ms ease,
+    visibility 0s;
+}
+.ws-outline[data-open="false"] {
+  visibility: hidden;
+  margin-right: -220px;
+  opacity: 0;
+  transition:
+    margin-right 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 120ms ease,
+    visibility 0s 180ms;
+}
+@media (max-width: 1100px) {
+  .ws-outline,
+  .ws-outline[data-open="false"] {
+    margin-right: 0;
+  }
+  .ws-outline {
+    transform: translateX(0);
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 140ms ease,
+      visibility 0s;
+  }
+  .ws-outline[data-open="false"] {
+    transform: translateX(100%);
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 120ms ease,
+      visibility 0s 180ms;
+  }
+}
+@keyframes ws-editor-enter {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ws-settings-enter {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.ws-mode-surface {
+  animation: ws-editor-enter 180ms ease-out;
+}
+.ws-settings-panel:not([hidden]) {
+  animation: ws-settings-enter 140ms ease-out;
+}
+.ws-app .ws-button,
+.ws-app .ws-icon-button,
+.ws-popover .ws-button,
+.ws-workspace-trigger {
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    color 120ms ease;
+}
+.ws-popover[data-slot="dialog-content"] {
+  --tw-enter-scale: 0.99;
+  --tw-exit-scale: 0.99;
+  animation-duration: 160ms;
+}
+.ws-popover[data-slot="dialog-content"][data-state="closed"] {
+  animation-duration: 120ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(.ws-app) [data-slot="dialog-overlay"],
+  .ws-sidebar-motion,
+  .ws-outline,
+  .ws-app *,
+  .ws-popover,
+  .ws-popover * {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.ws-pinned-item[data-highlight] {
+  background: var(--ws-selected);
+  box-shadow: inset 0 0 0 1px var(--ws-faint);
+}
+
+/* Indeterminate: moving segment does not imply a completed percentage. */
+.ws-opening-progress {
+  animation: ws-opening-scan 1.4s ease-in-out infinite;
+}
+@keyframes ws-opening-scan {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ws-opening-progress {
+    transform: translateX(100%);
+    animation: none;
+  }
+}
+
+/* Resource choices share the workspace palette in both themes. */
+.ws-resource-card {
+  background: var(--ws-surface);
+}
+.ws-resource-card:hover {
+  background: var(--ws-subtle);
+}
+.ws-resource-card[data-selected="true"] {
+  background: var(--ws-selected);
+  border-color: var(--ws-muted);
+}
+.ws-resource-card:has(input:disabled) {
+  cursor: default;
+  opacity: 0.65;
+}
+.ws-resource-example {
+  padding-left: 0.7rem;
+  margin-left: 0.4rem;
+  border-left: 1px solid var(--ws-strong-line);
+}
+.ws-resource-example > li {
+  position: relative;
+  padding-top: 0.15rem;
+}
+.ws-resource-example > li::before {
+  position: absolute;
+  top: 0.85rem;
+  left: -0.7rem;
+  width: 0.6rem;
+  content: "";
+  border-top: 1px solid var(--ws-strong-line);
+}

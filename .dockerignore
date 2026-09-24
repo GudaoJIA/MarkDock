@@ -1,0 +1,32 @@
+# Allow only reproducible build inputs; private and unknown root files stay out.
+**
+!Dockerfile
+!.dockerignore
+!package.json
+!bun.lock
+!next.config.ts
+!next-env.d.ts
+!tsconfig.json
+!postcss.config.mjs
+!LICENSE
+!src/
+!src/**
+!scripts/
+!scripts/**
+!tests/
+!tests/**
+
+# Never re-include private state within an allowed source directory.
+**/.local-dev
+**/.agents
+**/.claude
+**/.codex
+**/AGENTS.md
+**/CLAUDE.md
+**/.env*
+**/.markdock-auth.json
+**/.auth-*.tmp
+**/.noteai-create-*.tmp
+**/.noteai-backups
+**/.noteai-operations
+**/.noteai-trash

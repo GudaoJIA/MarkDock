@@ -1,0 +1,67 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+/.vscode
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.pnpm-store/*
+
+# testing
+/coverage
+/work/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+pnpm-debug.log*
+pnpm-error.log*
+.pnpm-debug.log*
+
+# Environment secrets; examples contain placeholders only
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Local documents and file-service recovery data
+/workspace-documents/
+.noteai-backups/
+.noteai-operations/
+.noteai-trash/
+
+# Local development archive and tool entry points
+/.local-dev/
+/.agents
+/.claude
+/.codex
+/AGENTS.md
+/CLAUDE.md
+/.mcp.json
+/skills-lock.json
+*.log
+*.swp
+*.swo
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Private login credentials and interrupted credential writes
+**/.markdock-auth.json
+**/.auth-*.tmp
+**/.noteai-create-*.tmp
