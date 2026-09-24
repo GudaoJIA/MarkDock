@@ -1,4 +1,4 @@
-# MarkDock documentation
+# Markdock documentation
 
 **English** | [简体中文](../ZH/README.md)
 
@@ -6,7 +6,7 @@ From installation to daily writing, read the guide for the task you want to comp
 
 ## First steps
 
-1. [Deploy MarkDock](01-deployment.md): choose source or Docker deployment, set a password, and start the service.
+1. [Deploy Markdock](01-deployment.md): choose source or Docker deployment, set a password, and start the service.
 2. [Open your first workspace](02-getting-started.md): sign in, pin a folder, and edit a document.
 3. [Adjust settings](03-configuration.md): understand service configuration, workspace resources, and browser preferences.
 

@@ -2,7 +2,7 @@
 
 [English](../EN/05-backup-and-recovery.md) | **简体中文**
 
-MarkDock 直接操作磁盘文件。自动保存、垃圾箱和操作恢复各有用途，不能替代独立备份。
+Markdock 直接操作磁盘文件。自动保存、垃圾箱和操作恢复各有用途，不能替代独立备份。
 
 ## 需要备份什么
 
@@ -20,7 +20,7 @@ MarkDock 直接操作磁盘文件。自动保存、垃圾箱和操作恢复各�
 ## 制作一致的备份
 
 1. 在页面确认所有文档保存成功，等待上传和文件操作结束。
-2. 停止 MarkDock，停止其他编辑器或脚本向相关目录写入。
+2. 停止 Markdock，停止其他编辑器或脚本向相关目录写入。
 3. 复制完整服务配置目录及工作区目录，包含隐藏文件和子目录。
 4. 将副本保存到独立存储，核对文件数量、权限和可读取性。
 
@@ -68,9 +68,9 @@ bun run auth:password --reset
 Docker 部署执行：
 
 ```sh
-docker compose --env-file .env.docker stop
-docker compose --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs --reset
-docker compose --env-file .env.docker up -d
+docker compose -f compose.image.yaml --env-file .env.docker stop
+docker compose -f compose.image.yaml --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs --reset
+docker compose -f compose.image.yaml --env-file .env.docker up -d
 ```
 
 重置不会修改文档或固定列表；服务重启后需要重新登录。凭证文件损坏时不会被静默覆盖，见[登录故障](06-troubleshooting.md#登录失败或会话失效)。
@@ -94,11 +94,11 @@ bun run build
 bun run start
 ```
 
-Docker 部署：
+Docker 镜像部署：先将 `compose.image.yaml` 的标签改为选定的已发布版本，再执行：
 
 ```sh
-docker compose --env-file .env.docker build
-docker compose --env-file .env.docker up -d --force-recreate
+docker compose -f compose.image.yaml --env-file .env.docker pull
+docker compose -f compose.image.yaml --env-file .env.docker up -d --force-recreate
 ```
 
 登录后检查工作区、文档和资源是否正常。绑定挂载保存在宿主机，重建容器不会替代备份。

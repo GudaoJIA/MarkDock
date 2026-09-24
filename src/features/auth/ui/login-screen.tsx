@@ -1,4 +1,5 @@
 'use client';
+import { BrandLogo } from '@/components/brand-logo';
 import {
   InterfaceProvider,
   useInterface,
@@ -19,7 +20,10 @@ function Content({
     <main className="flex min-h-screen items-center justify-center bg-background p-6 text-foreground">
       <section className="grid w-full max-w-sm gap-6 rounded-xl border bg-card p-6 shadow-sm">
         <div className="flex items-center justify-between gap-4">
-          <h1 className="font-semibold text-2xl">MarkDock</h1>
+          <h1 className="flex items-center gap-3 font-semibold text-2xl">
+            <BrandLogo size={28} />
+            Markdock
+          </h1>
           <button
             className="ws-button"
             onClick={() => update({ locale: locale === 'en' ? 'zh-CN' : 'en' })}

@@ -2,7 +2,7 @@
 
 **English** | [简体中文](../ZH/01-deployment.md)
 
-Run MarkDock from source or build a Docker image from source. The image repository is [gudaojia/markdock on Docker Hub](https://hub.docker.com/r/gudaojia/markdock). The first candidate publication and validation on target machines are still pending, so this guide does not yet provide a ready-to-use image tag or pull command.
+Use the published candidate **`gudaojia/markdock:0.1.0-rc.1`**, or run from source. The image includes `linux/amd64` and `linux/arm64`; Docker chooses the matching architecture. This is a release candidate, not a stable release; no `latest` tag is published. [Docker Hub](https://hub.docker.com/r/gudaojia/markdock/tags).
 
 ## Choose a deployment method
 
@@ -50,7 +50,14 @@ bun run start
 
 Replace the example paths and domain; directories must already exist. Use a service manager to keep the process running with the same environment. Keep the configuration directory outside document roots.
 
-## Docker source build
+## Docker Compose
+
+Get the repository to use the maintained [image Compose file](../../compose.image.yaml) and [environment template](../../.env.docker.example):
+
+```sh
+git clone https://github.com/GudaoJIA/MarkDock.git
+cd MarkDock
+```
 
 ### 1. Prepare bind mounts
 
@@ -81,14 +88,14 @@ Edit `.env.docker`:
 
 Do not put a password in this file. See the [environment example](../../.env.docker.example).
 
-### 3. Build, set a password, and start
+### 3. Pull, set a password, and start
 
 ```sh
-docker compose --env-file .env.docker config --quiet
-docker compose --env-file .env.docker build
-docker compose --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs
-docker compose --env-file .env.docker up -d
-docker compose --env-file .env.docker logs --tail=50 markdock
+docker compose -f compose.image.yaml --env-file .env.docker config --quiet
+docker compose -f compose.image.yaml --env-file .env.docker pull
+docker compose -f compose.image.yaml --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs
+docker compose -f compose.image.yaml --env-file .env.docker up -d
+docker compose -f compose.image.yaml --env-file .env.docker logs --tail=50 markdock
 ```
 
 Run the password command only on first setup; it does not expose a port. The runtime image does not contain Bun, so use the Node command shown above inside the container.
@@ -98,17 +105,21 @@ After configuring HTTPS, sign in and browse `/workspaces` in **Workspace managem
 ### 4. Check and stop
 
 ```sh
-docker compose --env-file .env.docker ps
-docker compose --env-file .env.docker stop
+docker compose -f compose.image.yaml --env-file .env.docker ps
+docker compose -f compose.image.yaml --env-file .env.docker stop
 ```
 
 Health checks only confirm that the process responds, not that a password is configured, all directories are writable, or disk space is available. Finish saving and wait for uploads and file operations before stopping. Compose allows 30 seconds for a normal shutdown.
 
 The root filesystem is read-only. Configuration and document mounts are writable, and temporary files use a size-limited memory filesystem. The container listens on `0.0.0.0`, while the host port binds only to `127.0.0.1`.
 
+### Optional: build from source
+
+The existing `compose.yaml` builds `markdock:local` from your checkout. To use it, omit `-f compose.image.yaml` in the commands above and replace `pull` with `build`. Rebuild after source changes. Do not run both configurations against the same data.
+
 ## HTTPS reverse proxy
 
-LAN and public access both require an explicitly configured HTTPS origin; there is no remote plain-HTTP switch. You can also reach the default loopback endpoint through an SSH tunnel.
+LAN and public access both require an explicitly configured HTTPS origin; there is no remote plain-HTTP switch. For local source mode, you can also reach its default loopback endpoint through an SSH tunnel; Docker still requires its configured HTTPS origin.
 
 The external address, browser `Origin`, and proxy-provided `Host` must match, including non-default ports. The application derives secure cookies from the explicit site configuration. It does not trust `Forwarded`, `X-Forwarded-Host`, or `X-Forwarded-Proto` for access decisions, and these headers do not determine sign-in rate-limit quotas.
 
@@ -126,10 +137,11 @@ location / {
     proxy_set_header Forwarded "";
     proxy_set_header X-Forwarded-For $remote_addr;
     proxy_cache off;
+    proxy_buffering off;
 }
 ```
 
-This is not a complete Nginx configuration. Configure certificates, unknown-Host rejection, connection and request limits, upload timeouts, and log retention separately. Do not cache sign-in, file, or authenticated page responses, or log request bodies, passwords, or cookies. MarkDock also applies its own JSON, image, and attachment limits. Use normal shutdown signals and allow active requests time to finish. Do not scale by running multiple processes against the same data directory.
+This is not a complete Nginx configuration. Configure certificates, unknown-Host rejection, connection and request limits, upload timeouts, and log retention separately. Do not cache sign-in, file, or authenticated page responses, or log request bodies, passwords, or cookies. Markdock also applies its own JSON, image, and attachment limits. Use normal shutdown signals and allow active requests time to finish. Do not scale by running multiple processes against the same data directory.
 
 If the proxy is also containerized, connect through a private Docker network and adapt the configuration to your topology. Do not expose the HTTP backend directly to the public internet. Progress streams need timely delivery; do not buffer or cache workspace responses.
 

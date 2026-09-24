@@ -23,6 +23,8 @@ The rightmost toolbar code icon opens Source; the editing icon returns to Visual
 
 Source provides line numbers, highlighting, wrapping, and search. Paste is plain text. There is no separate reading mode, and HTML, MDX, or template code is not executed.
 
+YAML frontmatter is retained separately from the Visual body. Use Source to edit it; there is no metadata form or built-in blog publishing.
+
 ## Formatting and the block menu
 
 Toolbar groups appear in this order:
@@ -111,7 +113,7 @@ Choose **Move to…** from a document menu, or drag it to an ordinary directory 
 
 The application handles dedicated directories according to resource ownership and updates supported local Markdown links. Fixed resources do not move with documents. Missing resources, unsupported references, or external changes may block the operation.
 
-**External file-manager moves are not tracked by MarkDock.** Back up important directories first and avoid concurrent writes from the application and external tools. File moves are not part of document undo history.
+**External file-manager moves are not tracked by Markdock.** Back up important directories first and avoid concurrent writes from the application and external tools. File moves are not part of document undo history.
 
 ## Deleting files and Trash
 

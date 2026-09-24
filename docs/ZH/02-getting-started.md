@@ -2,11 +2,11 @@
 
 [English](../EN/02-getting-started.md) | **简体中文**
 
-本页从已启动的 MarkDock 开始。尚未安装时，先阅读[部署说明](01-deployment.md)。
+本页从已启动的 Markdock 开始。尚未安装时，先阅读[部署说明](01-deployment.md)。
 
 ## 1. 登录
 
-打开服务地址，输入部署时设置的密码。MarkDock 没有默认密码或注册入口；忘记密码时由服务维护者[重置密码](05-backup-and-recovery.md#重置密码)。
+打开服务地址，输入部署时设置的密码。Markdock 没有默认密码或注册入口；忘记密码时由服务维护者[重置密码](05-backup-and-recovery.md#重置密码)。
 
 ## 2. 固定一个文件夹
 

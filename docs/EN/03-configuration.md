@@ -2,7 +2,7 @@
 
 **English** | [简体中文](../ZH/03-configuration.md)
 
-MarkDock has three kinds of settings, with different storage locations and scopes.
+Markdock has three kinds of settings, with different storage locations and scopes.
 
 | Settings | Where to change them | Storage | Scope |
 | --- | --- | --- | --- |

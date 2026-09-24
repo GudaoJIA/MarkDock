@@ -1,4 +1,4 @@
-# MarkDock 用户文档
+# Markdock 用户文档
 
 [English](../EN/README.md) | **简体中文**
 
@@ -6,7 +6,7 @@
 
 ## 首次使用
 
-1. [部署 MarkDock](01-deployment.md)：选择源码或 Docker，初始化密码并启动服务。
+1. [部署 Markdock](01-deployment.md)：选择源码或 Docker，初始化密码并启动服务。
 2. [打开第一个工作区](02-getting-started.md)：登录、固定文件夹、编辑文档。
 3. [调整设置](03-configuration.md)：了解服务配置、工作区资源和浏览器偏好的区别。
 

@@ -1,8 +1,8 @@
-# 01 · 部署 MarkDock
+# 01 · 部署 Markdock
 
 [English](../EN/01-deployment.md) | **简体中文**
 
-可选择源码运行或 Docker 源码构建。镜像仓库已确定为 [Docker Hub 上的 gudaojia/markdock](https://hub.docker.com/r/gudaojia/markdock)。首次候选镜像发布与目标机器验证尚未完成，因此本页暂不提供可直接使用的镜像标签或拉取命令。
+使用已发布的候选镜像 **`gudaojia/markdock:0.1.0-rc.1`**，也可从源码运行。镜像包含 `linux/amd64` 和 `linux/arm64`，Docker 自动选择匹配架构。当前为候选版本，尚非稳定版，未发布 `latest` 标签。[Docker Hub](https://hub.docker.com/r/gudaojia/markdock/tags)。
 
 ## 选择部署方式
 
@@ -50,7 +50,14 @@ bun run start
 
 示例路径和域名须替换为实际值，目录须预先存在。由服务管理工具保持进程运行，并使用相同环境变量。配置目录放在文档根之外。
 
-## Docker 源码构建
+## Docker Compose 部署
+
+获取仓库中的[镜像 Compose 文件](../../compose.image.yaml)和[环境模板](../../.env.docker.example)：
+
+```sh
+git clone https://github.com/GudaoJIA/MarkDock.git
+cd MarkDock
+```
 
 ### 1. 准备挂载目录
 
@@ -81,14 +88,14 @@ cp .env.docker.example .env.docker
 
 不要将密码写入环境文件。详细示例见[环境文件](../../.env.docker.example)。
 
-### 3. 构建、设密与启动
+### 3. 拉取镜像、设密与启动
 
 ```sh
-docker compose --env-file .env.docker config --quiet
-docker compose --env-file .env.docker build
-docker compose --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs
-docker compose --env-file .env.docker up -d
-docker compose --env-file .env.docker logs --tail=50 markdock
+docker compose -f compose.image.yaml --env-file .env.docker config --quiet
+docker compose -f compose.image.yaml --env-file .env.docker pull
+docker compose -f compose.image.yaml --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs
+docker compose -f compose.image.yaml --env-file .env.docker up -d
+docker compose -f compose.image.yaml --env-file .env.docker logs --tail=50 markdock
 ```
 
 密码命令仅首次执行，不开放端口。运行镜像不含 Bun，容器内使用上述 Node 命令。
@@ -98,17 +105,21 @@ docker compose --env-file .env.docker logs --tail=50 markdock
 ### 4. 检查与停止
 
 ```sh
-docker compose --env-file .env.docker ps
-docker compose --env-file .env.docker stop
+docker compose -f compose.image.yaml --env-file .env.docker ps
+docker compose -f compose.image.yaml --env-file .env.docker stop
 ```
 
 健康检查仅表示进程能响应，不代表已设置密码、所有目录可写或磁盘空间充足。停止前在页面完成保存，等待上传、移动等操作结束。Compose 预留 30 秒正常停止时间。
 
 根文件系统只读，配置与文档挂载可写，临时文件使用受限内存目录。容器内监听 `0.0.0.0`，宿主机端口只绑定 `127.0.0.1`。
 
+### 可选：从源码构建
+
+已有的 `compose.yaml` 从当前源码构建 `markdock:local`。使用它时，去掉上述命令中的 `-f compose.image.yaml`，并将 `pull` 改为 `build`。源码修改后需要重新构建。不要将两套配置同时运行在同一份数据上。
+
 ## HTTPS 反向代理
 
-局域网和公网访问都使用显式配置的 HTTPS 来源；不提供远程明文 HTTP 开关。本机访问也可通过 SSH 隧道使用默认回环入口。
+局域网和公网访问都使用显式配置的 HTTPS 来源；不提供远程明文 HTTP 开关。本机源码模式也可通过 SSH 隧道访问默认回环入口；Docker 模式仍需使用其配置的 HTTPS 来源。
 
 
 外部地址、浏览器 `Origin`、代理传给应用的 `Host` 必须一致（包含非默认端口）。应用使用显式站点配置确定安全 Cookie，忽略 `Forwarded`、`X-Forwarded-Host` 和 `X-Forwarded-Proto` 作为信任依据。不提供任意代理头信任开关，也不依据这些头分配登录限流额度。
@@ -127,6 +138,7 @@ location / {
     proxy_set_header Forwarded "";
     proxy_set_header X-Forwarded-For $remote_addr;
     proxy_cache off;
+    proxy_buffering off;
 }
 ```
 

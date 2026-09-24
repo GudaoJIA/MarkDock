@@ -17,6 +17,7 @@ ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 \
 RUN mkdir -p /var/lib/markdock /workspaces && chown node:node /var/lib/markdock /workspaces
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
 COPY --from=build /app/.next/admin/auth-password.mjs ./admin/auth-password.mjs
 COPY scripts/container-start.mjs scripts/healthcheck.mjs ./scripts/
 COPY src/features/workspace/server/deployment.mjs ./src/features/workspace/server/deployment.mjs

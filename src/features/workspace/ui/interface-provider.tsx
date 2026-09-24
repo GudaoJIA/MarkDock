@@ -88,8 +88,8 @@ export function InterfaceProvider({ children }: { children: ReactNode }) {
     root.lang = settings.locale;
     document.title =
       settings.locale === 'en'
-        ? 'MarkDock · Markdown workspace'
-        : 'MarkDock · 本地 Markdown 工作区';
+        ? 'Markdock · Markdown workspace'
+        : 'Markdock · 本地 Markdown 工作区';
   }, [resolvedAppearance, settings.locale]);
   const value = useMemo(
     () => ({

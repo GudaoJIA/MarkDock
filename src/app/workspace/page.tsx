@@ -10,8 +10,8 @@ import { WorkspaceApp } from '@/features/workspace/shell/workspace';
 import './workspace.css';
 
 export const metadata: Metadata = {
-  title: 'MarkDock · 本地 Markdown 工作区',
-  description: '以真实文件夹组织文档，专注写作并自动保存 Markdown。',
+  title: 'Markdock · Markdown workspace',
+  description: 'A focused workspace for Markdown files on your own storage.',
 };
 
 export default async function WorkspacePage() {

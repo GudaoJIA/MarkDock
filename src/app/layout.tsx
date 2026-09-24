@@ -20,7 +20,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   description:
     'A Markdown workspace in your browser. Documents and resources stay on the device running the service.',
-  title: 'MarkDock',
+  title: 'Markdock',
 };
 
 export default function RootLayout({

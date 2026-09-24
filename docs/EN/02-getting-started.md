@@ -2,7 +2,7 @@
 
 **English** | [简体中文](../ZH/02-getting-started.md)
 
-This guide starts with a running MarkDock service. If it is not installed yet, read [Deployment](01-deployment.md) first.
+This guide starts with a running Markdock service. If it is not installed yet, read [Deployment](01-deployment.md) first.
 
 ## 1. Sign in
 

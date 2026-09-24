@@ -9,6 +9,9 @@
 !tsconfig.json
 !postcss.config.mjs
 !LICENSE
+!public/
+!public/brand/
+!public/brand/**
 !src/
 !src/**
 !scripts/

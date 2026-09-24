@@ -2,7 +2,7 @@
 
 **English** | [简体中文](../ZH/05-backup-and-recovery.md)
 
-MarkDock operates directly on disk files. Automatic saving, Trash, and operation recovery serve different purposes and do not replace independent backups.
+Markdock operates directly on disk files. Automatic saving, Trash, and operation recovery serve different purposes and do not replace independent backups.
 
 ## What to back up
 
@@ -20,7 +20,7 @@ MarkDock operates directly on disk files. Automatic saving, Trash, and operation
 ## Make a consistent backup
 
 1. Confirm all documents have saved and wait for uploads and file operations to finish.
-2. Stop MarkDock and other editors or scripts writing to the same directories.
+2. Stop Markdock and other editors or scripts writing to the same directories.
 3. Copy the complete service configuration and workspace directories, including hidden files and subdirectories.
 4. Store copies independently and check file counts, permissions, and readability.
 
@@ -68,9 +68,9 @@ bun run auth:password --reset
 For Docker:
 
 ```sh
-docker compose --env-file .env.docker stop
-docker compose --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs --reset
-docker compose --env-file .env.docker up -d
+docker compose -f compose.image.yaml --env-file .env.docker stop
+docker compose -f compose.image.yaml --env-file .env.docker run --rm --no-deps markdock node admin/auth-password.mjs --reset
+docker compose -f compose.image.yaml --env-file .env.docker up -d
 ```
 
 Resetting does not change documents or pinned workspaces. Sign in again after restarting. Damaged credential files are not silently overwritten; see [Sign-in failures](06-troubleshooting.md#sign-in-failures-or-expired-sessions).
@@ -84,7 +84,7 @@ The password command accepts `--password-file /absolute/path`. It must be a regu
 
 ## Upgrades and rollback
 
-After a stopped-service backup, switch to the source version you intend to run.
+After a stopped-service backup, choose the source revision or published image version you intend to run.
 
 Source deployment:
 
@@ -94,11 +94,11 @@ bun run build
 bun run start
 ```
 
-Docker deployment:
+Docker image deployment: update the version tag in `compose.image.yaml` to the chosen published version, then run:
 
 ```sh
-docker compose --env-file .env.docker build
-docker compose --env-file .env.docker up -d --force-recreate
+docker compose -f compose.image.yaml --env-file .env.docker pull
+docker compose -f compose.image.yaml --env-file .env.docker up -d --force-recreate
 ```
 
 Sign in and check workspaces, documents, and resources. Bind mounts remain on the host; rebuilding a container is not a backup.

@@ -1,4 +1,6 @@
 'use client';
+import { BrandLogo } from '@/components/brand-logo';
+
 import { SessionControls } from '@/features/auth/ui/session-controls';
 import { useT } from '@/features/workspace/ui/interface-provider';
 
@@ -9,7 +11,6 @@ import { SystemSettings } from './system-settings';
 const MD_EXTENSION = /\.md$/i;
 
 import {
-  BookOpenIcon,
   FilePlus2Icon,
   FileTextIcon,
   FolderOpenIcon,
@@ -335,9 +336,9 @@ function WorkspaceView({
           style={{ width }}
         >
           <div className="flex h-16 shrink-0 items-center gap-2 px-5">
-            <BookOpenIcon size={19} />
+            <BrandLogo />
             <span className="font-semibold text-sm tracking-wide">
-              MarkDock
+              Markdock
             </span>
             <button
               aria-label={t('收起侧栏')}
