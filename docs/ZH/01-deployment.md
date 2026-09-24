@@ -2,7 +2,7 @@
 
 [English](../EN/01-deployment.md) | **简体中文**
 
-可选择源码运行或 Docker 源码构建。当前尚未发布官方镜像，因此本页不提供 Docker Hub 拉取命令。
+可选择源码运行或 Docker 源码构建。镜像仓库已确定为 [Docker Hub 上的 gudaojia/markdock](https://hub.docker.com/r/gudaojia/markdock)。首次候选镜像发布与目标机器验证尚未完成，因此本页暂不提供可直接使用的镜像标签或拉取命令。
 
 ## 选择部署方式
 

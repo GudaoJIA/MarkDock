@@ -1,0 +1,134 @@
+name: Publish Docker Hub candidate
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New candidate version, for example 0.1.0-rc.1 (no v prefix)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dockerhub-publish
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate repository, branch, and candidate version
+        env:
+          VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REPOSITORY" != "GudaoJIA/MarkDock" || "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo '::error::Publish only from GudaoJIA/MarkDock main.'
+            exit 1
+          fi
+          if (( ${#VERSION} > 128 )) || [[ ! "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)-rc\.[1-9][0-9]*$ ]]; then
+            echo '::error::Use a new candidate version such as 0.1.0-rc.1.'
+            exit 1
+          fi
+
+  verify:
+    needs: validate
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Checkout the validated commit
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+
+      - name: Check credentials and refuse an existing tag
+        env:
+          VERSION: ${{ inputs.version }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          python3 - <<'PY'
+          import base64, json, os, urllib.error, urllib.request
+          username = os.environ['DOCKERHUB_USERNAME']
+          password = os.environ['DOCKERHUB_TOKEN']
+          if username != 'gudaojia' or not password:
+              raise SystemExit('Set DOCKERHUB_USERNAME to gudaojia and provide DOCKERHUB_TOKEN in repository secrets.')
+          credentials = base64.b64encode(f'{username}:{password}'.encode()).decode()
+          request = urllib.request.Request(
+              'https://auth.docker.io/token?service=registry.docker.io&scope=repository:gudaojia/markdock:pull',
+              headers={'Authorization': f'Basic {credentials}'},
+          )
+          try:
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  token = json.load(response)['token']
+              request = urllib.request.Request(
+                  'https://registry-1.docker.io/v2/gudaojia/markdock/manifests/' + os.environ['VERSION'],
+                  method='HEAD',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json',
+                  },
+              )
+              try:
+                  with urllib.request.urlopen(request, timeout=30):
+                      raise SystemExit('This tag already exists. Choose a new candidate version; do not overwrite tested images.')
+              except urllib.error.HTTPError as error:
+                  if error.code != 404:
+                      raise SystemExit(f'Registry check failed (HTTP {error.code}); publication stopped.')
+          except (urllib.error.URLError, KeyError, ValueError):
+              raise SystemExit('Could not verify the registry tag; publication stopped.')
+          PY
+
+      - name: Set up ARM64 emulation
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4
+        with:
+          platforms: arm64
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and publish both platforms
+        id: image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: gudaojia/markdock:${{ inputs.version }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/GudaoJIA/MarkDock
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.version=${{ inputs.version }}
+          provenance: mode=min
+
+      - name: Verify published platforms and record the digest
+        env:
+          VERSION: ${{ inputs.version }}
+          DIGEST: ${{ steps.image.outputs.digest }}
+        run: |
+          set -eu
+          docker buildx imagetools inspect "gudaojia/markdock@$DIGEST" --raw > "$RUNNER_TEMP/markdock-manifest.json"
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads((Path(os.environ['RUNNER_TEMP']) / 'markdock-manifest.json').read_text())
+          platforms = {(item.get('platform', {}).get('os'), item.get('platform', {}).get('architecture')) for item in manifest['manifests']}
+          if not {('linux', 'amd64'), ('linux', 'arm64')} <= platforms:
+              raise SystemExit('Published manifest is missing a required platform. Do not use this candidate.')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write(f"## Candidate published\n\n- Image: `gudaojia/markdock:{os.environ['VERSION']}`\n- Digest: `{os.environ['DIGEST']}`\n- Source commit: `{os.environ['GITHUB_SHA']}`\n- Platforms: `linux/amd64`, `linux/arm64`\n\nBuild and manifest checks do not replace regression testing on target machines.\n")
+          PY

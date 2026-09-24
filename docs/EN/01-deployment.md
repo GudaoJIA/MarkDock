@@ -2,7 +2,7 @@
 
 **English** | [简体中文](../ZH/01-deployment.md)
 
-Run MarkDock from source or build a Docker image from source. No official image has been published yet, so this guide does not include a Docker Hub pull command.
+Run MarkDock from source or build a Docker image from source. The image repository is [gudaojia/markdock on Docker Hub](https://hub.docker.com/r/gudaojia/markdock). The first candidate publication and validation on target machines are still pending, so this guide does not yet provide a ready-to-use image tag or pull command.
 
 ## Choose a deployment method
 
